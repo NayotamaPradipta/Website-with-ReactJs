@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 
 
@@ -17,17 +17,37 @@ const Title = styled.h2`
 
 `;
 
-const Summary = styled.p`
 
+const Summary = styled.p`
+    display: ${(props) => {
+        if (props.display){
+            return "inline-block";
+        } else {
+            return "none";
+        }
+    }};
 `;
 
+const AddToWishlist = styled.button`
+    padding: 10px;
+`;
 
 function MovieObject(props){
+    const[showSummary, setShowSummary] = useState(false);
+
+
+
+
+    function alternateShowSummary(){
+        setShowSummary((prevShowSummary) => !prevShowSummary);
+    }
+
     return(
         <Main>
-            <Poster src = {`${props.posterPath}`}/>
+            <Poster onClick={alternateShowSummary} src ={`${props.posterPath}`}/>
             <Title>{props.title}</Title>
-            <Summary>{props.summary}</Summary>
+            <Summary display={showSummary}>{props.summary}</Summary>
+            <AddToWishlist onClick={() => {props.addToWishlist(props.title)}}>Add to Wish List</AddToWishlist>
         </Main>
     )
 }
