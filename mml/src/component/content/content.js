@@ -27,7 +27,7 @@ const WishlistButton = styled.button`
     padding: 5px;
     bottom: 0%;
     position: fixed;
-
+    justify-content: center;
 `;
 
 const ListButton = styled.button`
@@ -49,7 +49,17 @@ function Content (){
         setIsMovieList((prevIsMovieList) => !prevIsMovieList)
         
     }
+    
+    useEffect(()=>{
+        const wishlistCandidate = localStorage.getItem("wishlist");
+        if (wishlistCandidate !== null && wishlistCandidate !== undefined){
+            setWishlist(JSON.parse(wishlistCandidate));
+        } 
+    }, [])
 
+    useEffect(()=>{
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }, [wishlist]);
     
     function addToWishlist(addedMovieTitle){
         setWishlist((prevWishlist) => {
@@ -57,6 +67,7 @@ function Content (){
             for (const wishlistedMovie of prevWishlist){
                 if (addedMovieTitle === wishlistedMovie){
                     isInWishlist = true;
+                    break
                 }
             }
             if (isInWishlist){
@@ -95,7 +106,7 @@ function Content (){
     if (isMovieList){
         return (
             <Main>
-                <WishlistButton onClick={alternateList}>Wishlist</WishlistButton>
+                <WishlistButton onClick={alternateList}>My Wishlist</WishlistButton>
                 <ListContainer>
                 {movieMaker()}
                 </ListContainer>    
