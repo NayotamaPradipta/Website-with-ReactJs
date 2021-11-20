@@ -4,6 +4,9 @@ import styled from "styled-components";
 import movieData, { IMAGE_URL } from "./movieData";
 
 import MovieObject from "./movie";
+import Wishlisted from "./wishlisted";
+
+
 
 const Main = styled.div`
     color: ivory;
@@ -27,6 +30,12 @@ const WishlistButton = styled.button`
 
 `;
 
+const ListButton = styled.button`
+    background-color: ivory;
+    padding: 5px;
+    bottom: 0%;
+    position: fixed;
+`;
 
 
 function Content (){
@@ -44,9 +53,29 @@ function Content (){
     
     function addToWishlist(addedMovieTitle){
         setWishlist((prevWishlist) => {
-            return prevWishlist.concat(addedMovieTitle);
+            let isInWishlist = false;
+            for (const wishlistedMovie of prevWishlist){
+                if (addedMovieTitle === wishlistedMovie){
+                    isInWishlist = true;
+                }
+            }
+            if (isInWishlist){
+                return prevWishlist;
+            } else {
+                return prevWishlist.concat(addedMovieTitle);
+            }
+            
         })
     };
+
+    function removeFromWishlist(removedMovieTitle){
+        setWishlist((prevWishlist) => {
+            return prevWishlist.filter((value, index, arr) => {
+                return value !== removedMovieTitle;
+            })
+        })
+    }
+
     function movieMaker(){
         let movieList = [];
         for (const movie of movieData){
@@ -58,7 +87,7 @@ function Content (){
     function wishlistObjectMaker(){
         let wishlistObjectList = [];
         for (const movieTitle of wishlist){
-            wishlistObjectList.push(<div><p>{movieTitle}</p></div>)
+            wishlistObjectList.push(<Wishlisted title={movieTitle} removeFromWishlist={removeFromWishlist}/>)
         }
         return wishlistObjectList;
     };
@@ -75,6 +104,7 @@ function Content (){
     } else {
         return (
             <Main>
+                <ListButton onClick={alternateList}>Back to Movie List</ListButton>
                 {wishlistObjectMaker()}
             </Main>
         )
